@@ -90,7 +90,7 @@ public class Main {
 
         System.out.println("Запись в файл");
         writeToFile(userData[0], userData);
-
+        System.out.println("Завершение программы");
 
         scanner.close();
     }
@@ -168,19 +168,16 @@ public class Main {
             return false;
         }
     }
-    public static void writeToFile(String filePath, String[] data){
 
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter( filePath,true))){
+    public static void writeToFile(String filePath, String[] data) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(Arrays.toString(data));
             writer.newLine();
 
-    }catch(Exception e){
-        System.out.println("Произошла ошибка в записи");
-    }
+        } catch (Exception e) {
+            System.out.println("Произошла ошибка в записи");
+        }
 
     }
-
-
 }
-
-
