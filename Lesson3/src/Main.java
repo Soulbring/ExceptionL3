@@ -1,60 +1,58 @@
-//region Задание
-//          Проверка корректности даты
-//      Напишите приложение, которое будет запрашивать у пользователя следующие
-//данные впроизвольном порядке, разделенные пробелом:
-//Фамилия ИмяОтчестводатарождения номертелефона пол
-//Форматыданных:
-//фамилия, имя, отчество- строки
-//дата_рождения- строка формата dd.mm.yyyy
-//номер_телефона- целое беззнаковое число без форматирования
-//пол- символ латиницей f или m.
-//Приложение должно проверить введенные данные по количеству. Если
-//количество не совпадает с требуемым, вернуть код ошибки, обработать его и
-//показать пользователю сообщение, что он ввел меньше и больше данных, чем
-//требуется.
-//Приложение должно попытаться распарсить полученные значения и выделить из
-//них требуемые параметры. Если форматы данных не совпадают, нужно бросить
-//исключение, соответствующее типу проблемы. Можно использовать встроенные
-//типы java и создать свои. Исключение должно быть корректно обработано,
-//пользователю выведено сообщение с информацией, что именно неверно.
-//Если всё введено и обработано верно, должен создаться файл с названием,
-//равным фамилии, в него в однустроку должны записаться полученные данные,
-//вида
-//        <Фамилия><Имя><Отчество><датарождения> <номертелефона><пол>
-//        Однофамильцы должны записаться в один и тот же файл,в отдельные строки.
-//Не забудьте закрыть соединение с файлом.
-//При возникновении проблемы с чтением-записью в файл, исключение должно
-//быть корректно обработано, пользователь должен увидеть стектрейс ошибки.
-//endregion
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
+import java.text.ParseException;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите данные в формате : Фамилия Имя Отчество Дата_рождения Номер_телефона Пол");
         String[] userData = getUserData(scanner);
+        String date;
 
+        while (true) {
+            date = userData[3];
 
-        String firstName = userData[0];
-        String lastName = userData[1];
+            if (isValidDate(date)) {
+                break;
+            } else {
+                System.out.println("Дата рождения некорректна: " + date);
+                System.out.println("Хотите ввести дату заново? (y/n)");
+                String response = scanner.nextLine();
+
+                if (response.equalsIgnoreCase("n")) {
+                    System.out.println("Завершение программы");
+                    System.exit(0);
+                } else if (response.equalsIgnoreCase("y")) {
+                    System.out.println("Введите данные в формате : dd.MM.yyyy");
+                    userData [3] = scanner.nextLine();
+                } else {
+                    System.out.println("Неправильный ввод. Пожалуйста, введите 'y' или 'n'.");
+                }1
+            }
+        }
+
+        String lastName = userData[0];
+        String firstName = userData[1];
         String middleName = userData[2];
         String birthDate = userData[3];
         String phoneNumber = userData[4];
         String gender = userData[5];
 
-        System.out.println(firstName);
-        System.out.println(lastName);
-        System.out.println(middleName);
-        System.out.println(birthDate);
-        System.out.println(phoneNumber);
-        System.out.println(gender);
+        System.out.println("Фамилия: " + lastName);
+        System.out.println("Имя: " + firstName);
+        System.out.println("Отчество: " + middleName);
+        System.out.println("Дата рождения: " + birthDate);
+        System.out.println("Номер телефона: " + phoneNumber);
+        System.out.println("Пол: " + gender);
+
+        scanner.close();
     }
 
     public static String[] getUserData(Scanner scanner) {
-
         String[] data = null;
         boolean validInput = false;
+
         while (!validInput) {
             String input = scanner.nextLine();
             data = input.split(" ");
@@ -62,7 +60,6 @@ public class Main {
             if (data.length == 6) {
                 validInput = true;
             } else {
-
                 System.out.println("Ошибка: Введено должно быть 6 значений");
                 System.out.println("Хотите попробовать снова? (y/n)");
                 String response = scanner.nextLine();
@@ -71,12 +68,25 @@ public class Main {
                 } else if (response.equalsIgnoreCase("n")) {
                     System.out.println("Завершение программы");
                     System.exit(0);
+                } else {
+                    System.out.println("Неправильный ввод. Пожалуйста, введите 'y' или 'n'.");
                 }
-
             }
         }
 
         return data;
     }
-}
 
+    public static boolean isValidDate(String dateStr) {
+        final String DATE_FORMAT = "dd.MM.yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        sdf.setLenient(false);
+
+        try {
+            Date date = sdf.parse(dateStr);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+}
