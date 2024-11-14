@@ -1,4 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 import java.text.ParseException;
@@ -76,12 +79,18 @@ public class Main {
             }
         }
 
+
         System.out.println("Фамилия: " + userData[0]);
         System.out.println("Имя: " + userData[1]);
         System.out.println("Отчество: " + userData[2]);
         System.out.println("Дата рождения: " + userData[3]);
         System.out.println("Номер телефона: " + userData[4]);
         System.out.println("Пол: " + userData[5]);
+
+
+        System.out.println("Запись в файл");
+        writeToFile(userData[0], userData);
+
 
         scanner.close();
     }
@@ -146,19 +155,32 @@ public class Main {
         String input = gender;
         try {
             if (input.length() != 1) {
-                throw new Exception("Ввод должен состоять из одного символа.");
+                throw new Exception();
             }
 
             char letter = input.charAt(0);
             if (letter == 'f' || letter == 'm') {
                 return true;
             } else {
-                throw new Exception("Введена неверная буква. Пожалуйста, введите 'f' или 'm'.");
+                throw new Exception();
             }
         } catch (Exception e) {
             return false;
         }
     }
+    public static void writeToFile(String filePath, String[] data){
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter( filePath,true))){
+            writer.write(Arrays.toString(data));
+            writer.newLine();
+
+    }catch(Exception e){
+        System.out.println("Произошла ошибка в записи");
+    }
+
+    }
+
+
 }
 
 
